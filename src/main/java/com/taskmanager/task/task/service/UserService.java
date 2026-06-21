@@ -38,18 +38,20 @@ public class UserService {
         }
 
         User savedUser = userRepository.save(user);
-        emailService.sendEmail(
-                savedUser.getEmail(),
-                "Welcome to TaskFlow - Login Details",
-                "Hello " + savedUser.getName() + ",\n\n" +
-                        "Your TaskFlow account has been created successfully.\n\n" +
-                        "Login Details:\n" +
-                        "Username: " + savedUser.getUsername() + "\n" +
-                        "Password: " + rawPassword + "\n\n" +
-                        "Please login and start managing your tasks.\n\n" +
-                        "Thanks,\n" +
-                        "TaskFlow Team"
-        );
+        try {
+            emailService.sendEmail(
+                    savedUser.getEmail(),
+                    "Welcome to TaskFlow",
+                    "Hello " + savedUser.getName() + ",\n\n" +
+                            "Your account has been created successfully.\n\n" +
+                            "Username: " + savedUser.getUsername() + "\n" +
+                            "Password: " + rawPassword + "\n\n" +
+                            "Thanks,\nTaskFlow Team"
+            );
+        } catch (Exception e) {
+            System.out.println("Email sending failed: " + e.getMessage());
+        }
+
         return savedUser;
     }
 
