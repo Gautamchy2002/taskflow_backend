@@ -20,16 +20,50 @@ public class UserService {
     @Autowired
     private EmailService emailService;
 
-    public User signup(User user){
-     if (userRepository.findByUsername(user.getUsername()).isPresent()) {
-         throw new RuntimeException("Username already exists");
-     }
+//    public User signup(User user){
+//     if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+//         throw new RuntimeException("Username already exists");
+//     }
+//
+//     if (userRepository.findByEmail(user.getEmail()).isPresent()){
+//         throw new RuntimeException("Email already exists");
+//     }
+//
+//     String rawPassword = user.getPassword();
+//        user.setPassword(passwordEncoder.encode(user.getPassword()));
+//
+//        if (user.getRoles() == null || user.getRoles().isEmpty()) {
+//            user.setRoles(new ArrayList<>());
+//            user.getRoles().add("USER");
+//        }
+//
+//        User savedUser = userRepository.save(user);
+//        try {
+//            emailService.sendEmail(
+//                    savedUser.getEmail(),
+//                    "Welcome to TaskFlow",
+//                    "Hello " + savedUser.getName() + ",\n\n" +
+//                            "Your account has been created successfully.\n\n" +
+//                            "Username: " + savedUser.getUsername() + "\n" +
+//                            "Password: " + rawPassword + "\n\n" +
+//                            "Thanks,\nTaskFlow Team"
+//            );
+//        } catch (Exception e) {
+//            System.out.println("Email sending failed: " + e.getMessage());
+//        }
+//
+//        return savedUser;
+//    }
 
-     if (userRepository.findByEmail(user.getEmail()).isPresent()){
-         throw new RuntimeException("Email already exists");
-     }
+    public User signup(User user) {
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+            throw new RuntimeException("Username already exists");
+        }
 
-     String rawPassword = user.getPassword();
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new RuntimeException("Email already exists");
+        }
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         if (user.getRoles() == null || user.getRoles().isEmpty()) {
@@ -37,22 +71,7 @@ public class UserService {
             user.getRoles().add("USER");
         }
 
-        User savedUser = userRepository.save(user);
-        try {
-            emailService.sendEmail(
-                    savedUser.getEmail(),
-                    "Welcome to TaskFlow",
-                    "Hello " + savedUser.getName() + ",\n\n" +
-                            "Your account has been created successfully.\n\n" +
-                            "Username: " + savedUser.getUsername() + "\n" +
-                            "Password: " + rawPassword + "\n\n" +
-                            "Thanks,\nTaskFlow Team"
-            );
-        } catch (Exception e) {
-            System.out.println("Email sending failed: " + e.getMessage());
-        }
-
-        return savedUser;
+        return userRepository.save(user);
     }
 
     public User login(String username, String password) {
