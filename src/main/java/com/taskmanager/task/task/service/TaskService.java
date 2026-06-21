@@ -24,20 +24,21 @@ public class TaskService {
     @Autowired
     private EmailService emailService;
 
-    @CacheEvict(value = "tasks", key = "#username")
+    @CacheEvict(value = "userTasksV2", key = "#username")
     public Task createTask(Task task, String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+
         task.setUserId(user.getId());
         task.setUserEmail(user.getEmail());
 
-        if(task.getStatus() == null || task.getStatus().isEmpty()){
+        if (task.getStatus() == null || task.getStatus().isEmpty()) {
             task.setStatus("PENDING");
         } else {
             task.setStatus(task.getStatus().toUpperCase());
         }
 
-        if (task.getPriority() == null || task.getPriority().isEmpty()){
+        if (task.getPriority() == null || task.getPriority().isEmpty()) {
             task.setPriority("MEDIUM");
         } else {
             task.setPriority(task.getPriority().toUpperCase());
@@ -59,11 +60,13 @@ public class TaskService {
                         "Due Date: " + savedTask.getDueDate() + "\n\n" +
                         "Thanks,\nTaskFlow Team"
         );
+
         return savedTask;
     }
-     @Cacheable(value = "tasks", key = "#username")
-    public List<Task> getMyTasks(String username){
-         System.out.println("Fetching tasks from MongoDB...");
+
+    @Cacheable(value = "userTasksV2", key = "#username")
+    public List<Task> getMyTasks(String username) {
+        System.out.println("Fetching tasks from MongoDB...");
 
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -72,7 +75,6 @@ public class TaskService {
     }
 
     public Task getTaskById(String taskId, String username) {
-
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -80,9 +82,8 @@ public class TaskService {
                 .orElseThrow(() -> new RuntimeException("Task not found"));
     }
 
-    @CacheEvict(value = "tasks", key = "#username")
+    @CacheEvict(value = "userTasksV2", key = "#username")
     public Task updateTask(String taskId, Task updatedTask, String username) {
-
         Task existingTask = getTaskById(taskId, username);
 
         if (updatedTask.getTitle() != null && !updatedTask.getTitle().isEmpty()) {
@@ -110,17 +111,13 @@ public class TaskService {
         return taskRepository.save(existingTask);
     }
 
-    @CacheEvict(value = "tasks", key = "#username")
+    @CacheEvict(value = "userTasksV2", key = "#username")
     public void deleteTask(String taskId, String username) {
-
         Task existingTask = getTaskById(taskId, username);
-
         taskRepository.delete(existingTask);
     }
 
-
     public List<Task> getTasksByStatus(String username, String status) {
-
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -131,7 +128,6 @@ public class TaskService {
     }
 
     public List<Task> getTasksByPriority(String username, String priority) {
-
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
