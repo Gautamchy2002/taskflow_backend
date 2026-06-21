@@ -76,20 +76,37 @@ public class EmailService {
                     "textContent", body
             );
 
-            webClient.post()
+//            webClient.post()
+//                    .uri("/smtp/email")
+//                    .header("api-key", brevoApiKey)
+//                    .header("Content-Type", "application/json")
+//                    .bodyValue(payload)
+//                    .retrieve()
+//                    .bodyToMono(String.class)
+//                    .doOnSuccess(response ->
+//                            System.out.println("Email sent successfully to: " + to)
+//                    )
+//                    .doOnError(error ->
+//                            System.out.println("Email sending failed: " + error.getMessage())
+//                    )
+//                    .subscribe();
+            String responseBody = webClient.post()
                     .uri("/smtp/email")
                     .header("api-key", brevoApiKey)
+                    .header("accept", "application/json")
                     .header("Content-Type", "application/json")
                     .bodyValue(payload)
-                    .retrieve()
-                    .bodyToMono(String.class)
-                    .doOnSuccess(response ->
-                            System.out.println("Email sent successfully to: " + to)
+                    .exchangeToMono(response ->
+                            response.bodyToMono(String.class)
+                                    .map(responseText -> {
+                                        System.out.println("Brevo status: " + response.statusCode());
+                                        System.out.println("Brevo response: " + responseText);
+                                        return responseText;
+                                    })
                     )
-                    .doOnError(error ->
-                            System.out.println("Email sending failed: " + error.getMessage())
-                    )
-                    .subscribe();
+                    .block();
+
+            System.out.println("Brevo final response: " + responseBody);
 
         } catch (Exception e) {
             System.out.println("Email sending failed: " + e.getMessage());
