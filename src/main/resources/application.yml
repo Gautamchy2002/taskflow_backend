@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: taskflow
+
+  data:
+    mongodb:
+      uri: ${MONGO_URI}
+      database: taskflowdb
+      auto-index-creation: true
+    redis:
+      url: ${REDIS_URL}
+
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+server:
+  port: ${PORT:8080}
