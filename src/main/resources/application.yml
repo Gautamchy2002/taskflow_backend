@@ -1,3 +1,34 @@
+#spring:
+#  application:
+#    name: taskflow
+#
+#  data:
+#    mongodb:
+#      uri: ${MONGO_URI}
+#      database: taskflowdb
+#      auto-index-creation: true
+#    redis:
+#      url: ${REDIS_URL}
+#
+#
+#  mail:
+#    host: smtp-relay.brevo.com
+#    port: 587
+#    username: ${MAIL_USERNAME}
+#    password: ${MAIL_PASSWORD}
+#    properties:
+#      mail:
+#        smtp:
+#          auth: true
+#          starttls:
+#            enable: true
+#
+#
+#
+#server:
+#  port: ${PORT:8080}
+
+
 spring:
   application:
     name: taskflow
@@ -7,23 +38,13 @@ spring:
       uri: ${MONGO_URI}
       database: taskflowdb
       auto-index-creation: true
+
     redis:
       url: ${REDIS_URL}
 
-
-  mail:
-    host: smtp-relay.brevo.com
-    port: 587
-    username: ${MAIL_USERNAME}
-    password: ${MAIL_PASSWORD}
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-
-
-
 server:
   port: ${PORT:8080}
+
+BREVO_API_KEY: ${BREVO_API_KEY}
+BREVO_SENDER_EMAIL: ${BREVO_SENDER_EMAIL}
+BREVO_SENDER_NAME: ${BREVO_SENDER_NAME}
